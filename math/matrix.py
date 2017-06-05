@@ -1,12 +1,9 @@
 from math import *
 from random import *
-# from functools import reduce
-# from goto import goto,label
+
 
 matrix1=[[3,1],[-3,1]]
-#matrix1='a'
-# matrix2=[[3,1],[-3,4]]
-# matrix2="sdgfsdfs"
+
 matrix2=[[3,1],[6,1],[6,1]]
 
 def is_matrix(matrix,verbose=0):
@@ -123,5 +120,3 @@ def matrix_multiply(matrix1,matrix2):
                 value+=matrix_get_position(matrix1,row,position)*matrix_get_position(matrix2,col,position)
             new_matrix[row].append(value)
     return new_matrix
-
-print(matrix_multiply(matrix1,6))
