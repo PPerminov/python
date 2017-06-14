@@ -10,4 +10,4 @@ def akkerman(m, n):
     return akkerman(m - 1, akkerman(m, n - 1))
 
 
-print(akkerman(12, 1))
+print(akkerman(5, 5))
