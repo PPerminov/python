@@ -52,13 +52,13 @@ def test_chain():
     testdir = "test_data"
     chainfile = open(chainfile_f, "r")
     files = os.listdir(testdir)
-    f_count=0
+    f_count = 0
     chainnum = -1
     previous = "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"
     for line in chainfile:
         hash1 = "6666"
         multiplier = -1
-        f_count+=1
+        f_count += 1
         file1 = testdir + "/" + files[f_count]
         myfile = open(file1, "r")
         string = myfile.read()
@@ -70,10 +70,9 @@ def test_chain():
         chainnum = chainnum + 1
         line1 = str(chainnum) + ";" + hash1 + "\n"
         if line != line1:
-            return "Broken on file \"" + files[f_count-1] + "\""
+            return "Broken on file \"" + files[f_count - 1] + "\""
         myfile.close
     return "All is fine"
-
 
 
 def main():
