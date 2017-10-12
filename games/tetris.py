@@ -46,27 +46,26 @@ def rotateRight(figure):
 def dropFullLines(field):
     length = len(field)
     positionsInLine = len(field[0])
-    additionalLine=[]
+    additionalLine = []
     while len(additionalLine) != positionsInLine:
         additionalLine.append(0)
-    def worker(accum,position):
+
+    def worker(accum, position, counter):
         if position == length:
             return accum
-        currentLine=field[position]
+        currentLine = field[position]
         print accum
         if sum(currentLine) == positionsInLine:
-            return worker(accum,position + 1)
+            return worker(accum, position + 1, counter + 1)
         accum.append(currentLine)
-        return worker(accum,position + 1)
-    newField=worker([],0)
+        return worker(accum, position + 1)
+    newField = worker([], 0)
     while len(newField) < length:
         newField.append(additionalLine)
     return newField[::-1]
 
 
-
-
-
-field = [[1,1,1,1],[1,1,1,1],[1,0,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]]
+field = [[1, 1, 1, 1], [1, 1, 1, 1], [1, 0, 1, 1],
+         [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]
 
 print(dropFullLines(field))
