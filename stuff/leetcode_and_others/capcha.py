@@ -19,7 +19,6 @@ setrecursionlimit(2000)
 ##print(time.time() -t)
 
 
-
 # def initer(ar):
 # ret=[]
 # ar=ar.split('\t')
@@ -139,9 +138,6 @@ setrecursionlimit(2000)
 
 # if not array[row-1]:
 # array=up(array,)
-
-
-
 
 
 # def down(array,size, position, point, pos=0,temp=[]):
@@ -418,3 +414,71 @@ setrecursionlimit(2000)
 #
 # print(infi_loop(data))
 # print(infi_loop1(data))
+
+
+# day7
+
+def tower(line):
+    array1 = line.split('\n')
+    array2 = {}
+    for item in array1:
+        d = item.split('->')
+        d1 = d[0].split()
+        try:
+            children = list(map(lambda x: x.strip(', '), (d[1]).split(',')))
+        except:
+            children = []
+        name = d1[0]
+        weight = int(d1[1].strip(')( '))
+        array2[name] = [children, weight]
+    bases = [f for f, val in array2.items() if val[0] != []]
+    base_leafs = []
+    for item in bases:
+        for i in array2[item][0]:
+            base_leafs.append(i)
+    rf = []
+    for item in sorted(bases):
+        if item not in base_leafs:
+            rf.append(item)
+    return [rf[0], array2]
+
+
+def balancer(basement, arr):
+    position = 0
+    ar1 = []
+    ar2 = []
+
+    def walker(basement):
+        current_programs = arr[basement][0]
+        current_weight = arr[basement][1]
+        if len(current_programs) == 0:
+            return {'upper': 0, 'self': current_weight}
+        weights = []
+        for prog in current_programs:
+            weights.append(walker(prog))
+        uppers = []
+        self_1 = []
+        results1=[]
+        for branch in weights:
+            uppers.append(branch['upper'])
+            self_1.append(branch['self'])
+            results1.append(branch['upper']+branch['self'])
+            # datas.append([self_1, self_1 + upper])
+        if min(results1) != max(results1):
+            print(uppers)
+            print(self_1)
+            print(results1)
+        # try:
+        #     sum(weights)
+        # except:
+        #     print(weights)
+        return {'upper': sum(results1), 'self': current_weight}
+
+    walker(basement)
+
+
+day7 = tower(day7_raw)
+
+# print(day7[1])
+
+print(balancer(day7[0], day7[1]))
