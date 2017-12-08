@@ -491,17 +491,21 @@ data8_raw = list(map(lambda x: x.split(), day8_raw.split("\n")))
 
 
 def day8_func(data8_raw):
+
+
+    data8 = {}
+    max1=0
+    data8_tmp = {}
     def valuer():
         if operation == 'inc':
             data8_tmp[name]+=int(value)
         else:
             data8_tmp[name]-=int(value)
+    def maxer(max1):
         if data8_tmp[name] > max1:
             max1=data8_tmp[name]
+        return max1
 
-    data8 = {}
-    max1=0
-    data8_tmp = {}
     position = 0
     for item in data8_raw:
         # data8_tmp[item[0]] = 0
@@ -528,48 +532,36 @@ def day8_func(data8_raw):
             data8_tmp[con_source1] = 0
         if con_type == '<':
             if data8_tmp[con_source1] < int(con_val):
-                if operation == 'inc':
-                    data8_tmp[name]+=int(value)
-                else:
-                    data8_tmp[name]-=int(value)
+                valuer()
                 continue
+
         elif con_type == '<=':
             if data8_tmp[con_source1] <= int(con_val):
-                if operation == 'inc':
-                    data8_tmp[name]+=int(value)
-                else:
-                    data8_tmp[name]-=int(value)
+                valuer()
+                max1=maxer(max1)
                 continue
         elif con_type == '==':
             if data8_tmp[con_source1] == int(con_val):
-                if operation == 'inc':
-                    data8_tmp[name]+=int(value)
-                else:
-                    data8_tmp[name]-=int(value)
+                valuer()
+                max1=maxer(max1)
                 continue
         elif con_type == '>=':
             if data8_tmp[con_source1] >= int(con_val):
-                if operation == 'inc':
-                    data8_tmp[name]+=int(value)
-                else:
-                    data8_tmp[name]-=int(value)
+                valuer()
+                max1=maxer(max1)
                 continue
         elif con_type == '>':
             if data8_tmp[con_source1] > int(con_val):
-                if operation == 'inc':
-                    data8_tmp[name]+=int(value)
-                else:
-                    data8_tmp[name]-=int(value)
+                valuer()
+                max1=maxer(max1)
                 continue
         elif con_type == '!=':
             if data8_tmp[con_source1] != int(con_val):
-                if operation == 'inc':
-                    data8_tmp[name]+=int(value)
-                else:
-                    data8_tmp[name]-=int(value)
+                valuer()
+                max1=maxer(max1)
                 continue
-    print(max(list(f for p,f in data8_tmp.items())))
-    return data8_tmp
+
+    return {'part1':max(list(f for p,f in data8_tmp.items())),'part2':max1}
 print(day8_func(data8_raw))
 # >
 # >=
