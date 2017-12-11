@@ -594,48 +594,88 @@ setrecursionlimit(20000000)
 
 # DAY 9
 
-day9_raw = open('day9_input', 'r')
-day9 = list(day9_raw.read())
-day9_raw.close()
+# day9_raw = open('day9_input', 'r')
+# day9 = list(day9_raw.read())
+# day9_raw.close()
+#
+# # day9 = '{{{}}}'
+#
+#
+# def bracketer(data):
+#     o_brackets = 0
+#     sum0 = 0
+#     position = 0
+#     garbage_count=0
+#     counter = 0
+#     garbage = 0
+#     line_len = len(data)
+#     i = 0
+#     while i < line_len:
+#         # print(o_brackets)
+#         cur = data[i]
+#         i += 1
+#         if cur == '!':
+#             i += 1
+#             continue
+#         if garbage != 0 and cur == ">":
+#             garbage = 0
+#             continue
+#         if garbage == 1:
+#             garbage_count +=1
+#             continue
+#         if cur == "<":
+#             garbage = 1
+#             continue
+#         if cur == "{":
+#             o_brackets += 1
+#             sum0+=o_brackets
+#             counter += 1
+#             continue
+#         if cur == "}":
+#             o_brackets -= 1
+#             continue
+#         continue
+#     return [sum0,garbage_count]
+#
+#
+# print(bracketer(day9))
 
-# day9 = '{{{}}}'
+# Day 10
 
 
-def bracketer(data):
-    o_brackets = 0
-    sum0 = 0
+def knot_hash(input_line,working_list = list(range(5))):
     position = 0
-    garbage_count=0
-    counter = 0
-    garbage = 0
-    line_len = len(data)
-    i = 0
-    while i < line_len:
-        # print(o_brackets)
-        cur = data[i]
-        i += 1
-        if cur == '!':
-            i += 1
-            continue
-        if garbage != 0 and cur == ">":
-            garbage = 0
-            continue
-        if garbage == 1:
-            garbage_count +=1
-            continue
-        if cur == "<":
-            garbage = 1
-            continue
-        if cur == "{":
-            o_brackets += 1
-            sum0+=o_brackets
-            counter += 1
-            continue
-        if cur == "}":
-            o_brackets -= 1
-            continue
-        continue
-    return [sum0,garbage_count]
+    offset = 0
+    working_list = list(range(256))
+    def get_positions(start, rng):
+        end = start + rng
+        if end > len(working_list) - 1:
+            start_part = list(range(start, len(working_list)))
+            end_part = list(range(end - len(working_list)))
+            return start_part + end_part
+        return list(range(start,end))
+    for item in input_line:
+
+        positions=get_positions(position,item)
+        # print(len(positions))
+        tmp_line=[]
+        # print(positions,position)
+        for pos in positions:
+            # print(pos,item)
+            tmp_line.append(working_list[pos])
+        tmp_line.reverse()
+        for new in tmp_line:
+            # print(positions[0])
+            working_list[positions[0]] = new
+            del(positions[0])
+            # print(positions)
+        position += (item + offset)
+        while position > len(working_list) -1:
+            print(position)
+            position = position - len(working_list)
+        offset +=1
+    return [working_list,working_list[0]*working_list[1]]
 
 
-print(bracketer(day9))
+
+print(knot_hash(day10))
