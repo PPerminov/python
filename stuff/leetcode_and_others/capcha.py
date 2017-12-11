@@ -605,42 +605,37 @@ def bracketer(data):
     o_brackets = 0
     sum0 = 0
     position = 0
+    garbage_count=0
     counter = 0
     garbage = 0
     line_len = len(data)
     i = 0
     while i < line_len:
-        print(o_brackets)
+        # print(o_brackets)
         cur = data[i]
         i += 1
         if cur == '!':
-            # return bracketer(data, o_brackets, position + 2, counter, garbage)
             i += 1
             continue
-
         if garbage != 0 and cur == ">":
             garbage = 0
             continue
-            # return bracketer(data, o_brackets, position + 1, counter, 0)
+        if garbage == 1:
+            garbage_count +=1
+            continue
         if cur == "<":
             garbage = 1
-            continue
-            # return bracketer(data, o_brackets, position + 1, counter, 1)
-        if garbage == 1:
             continue
         if cur == "{":
             o_brackets += 1
             sum0+=o_brackets
             counter += 1
             continue
-            # return bracketer(data, o_brackets + 1, position + 1, counter + 1, garbage)
         if cur == "}":
             o_brackets -= 1
             continue
-            # return bracketer(data, o_brackets - 1, position + 1, counter, garbage)
         continue
-        # return bracketer(data, o_brackets, position + 1, counter, garbage)
-    return [counter, sum0]
+    return [sum0,garbage_count]
 
 
 print(bracketer(day9))
