@@ -643,12 +643,11 @@ setrecursionlimit(20000000)
 
 # Day 10
 #
+day10_ascii = [ord(f) for f in list(
+    ','.join(map(lambda x: str(x), day10)))] + [17, 31, 73, 47, 23]
 
 
-def knot_hash(input_line):
-    position = 0
-    offset = 0
-    working_list = list(range(256))
+def knot_hash(input_line, rounds=1):
     def get_positions(start, rng):
         end = start + rng
         if end > len(working_list) - 1:
@@ -656,112 +655,85 @@ def knot_hash(input_line):
             end_part = list(range(end - len(working_list)))
             return start_part + end_part
         return list(range(start, end))
-    for item in input_line:
-        positions = get_positions(position, item)
-        tmp_line = []
-        for pos in positions:
-            tmp_line.append(working_list[pos])
-        tmp_line.reverse()
-        for new in tmp_line:
-            working_list[positions[0]] = new
-            del(positions[0])
-        position += (item + offset)
-        while position > len(working_list) - 1:
-            # print(position)
-            position = position - len(working_list)
-        offset += 1
+    for _ in range(rounds):
+        position = 0
+        offset = 0
+        working_list = list(range(256))
+        for item in input_line:
+            positions = get_positions(position, item)
+            tmp_line = []
+            for pos in positions:
+                tmp_line.append(working_list[pos])
+            tmp_line.reverse()
+            for new in tmp_line:
+                working_list[positions[0]] = new
+                del(positions[0])
+            position += (item + offset)
+            while position > len(working_list) - 1:
+                # print(position)
+                position = position - len(working_list)
+            offset += 1
     return {'list': working_list, 'part1': working_list[0] * working_list[1], 'pos': position, 'offset': offset}
 
 
-day10_part2 = knot_hash(day10)
-day10_ascii = [ord(f) for f in list(
-    ','.join(map(lambda x: str(x), day10)))] + [17, 31, 73, 47, 23]
+day10_part1 = knot_hash(day10)
+day10_part2 = knot_hash(day10_ascii, 64)
+# print(day10_part2)
 
-# print(day10_ascii)
-# def knot_hash_2(input_line, working_list1, position, offset):
-#     working_list = working_list1
-#     w_list1 = []
-#
-#     def get_positions(start, rng):
-#         end = start + rng
-#         if end > len(working_list) - 1:
-#             start_part = list(range(start, len(working_list)))
-#             end_part = list(range(end - len(working_list)))
-#             return start_part + end_part
-#         return list(range(start, end))
-#     big_circle = 64
-#     item = 0
-#     # while big_circle >= 0:
-#     for _ in range(big_circle):
-#         # print(big_circle)
-#         # big_circle -= 1
-#         for item in input_line:
-#             positions = get_positions(position, item)
-#             # print(positions,item)
-#             tmp_line = []
-#             for pos in positions:
-#                 tmp_line.append(working_list[pos])
-#             tmp_line.reverse()
-#             for new in tmp_line:
-#                 # print(working_list[positions[0]], new)
-#                 working_list[positions[0]] = new
-#                 del(positions[0])
-#             w_list1.append(working_list)
-#         position += (item + offset)
-#         while position > len(working_list) - 1:
-#             # print(position)
-#             position = position - len(working_list)
-#
-#         offset += 1
-#     drankel = []
-#     for item in w_list1:
-#         if item not in drankel:
-#             drankel.append(item)
-#     print('Qjgnf!!!', len(drankel), len(w_list1))
-#     return working_list
+# n1 = []
+# counter = 0
+# new1_0 = []
+# for item in day10_part2['list']:
+#     # print(item)
+#     if counter != 0 and counter % 16 == 0:
+#         n1.append(new1_0)
+#         # print(len(new1_0))
+#         new1_0 = []
+#     new1_0.append(item)
+#     counter += 1
 
+dense = []
 
-day2_data = knot_hash_2(
-    day10_ascii, [x for x in range(256)], day10_part2['pos'], day10_part2['offset'])
-# print(len(day2_data))
-# day10_part2['list']
+for y in range(16):
+    xor_list = day10_part2['list'][y*16:(y+1)*16]
+    xor = xor_list[0]
+    for i in range(1, len(xor_list)):
+        xor = xor ^ xor_list[i]
+    dense.append(xor)
+print(dense)
+s = ""
+for x in dense:
+    s += "{:02x}".format(x)
 
-n1=[]
-counter=1
-new1_0 = []
-for item in day2_data:
-    if counter % 16 == 0:
-        n1.append(new1_0)
-        new1_0 = []
-    new1_0.append(item)
-    counter +=1
+print(s)
 
-fline=''
-for item in n1:
-    item1=reduce((lambda x, y: x ^ y),item)
-    h_tmp=hex(item1).split('x')[-1]
-    if len(h_tmp) !=2:
-        h_tmp='0'+h_tmp
-
-    fline+=h_tmp
-
-# for item in n1
-
-print(fline)
+# fline = ''
+# for item in n1:
+#     item1 = reduce((lambda x, y: x ^ y), item)
+#     h_tmp = hex(item1).split('x')[-1]
+#     if len(h_tmp) != 2:
+#         h_tmp = '0' + h_tmp
 #
+#     fline += h_tmp
+# print(fline)
 #
-# 00001100
-# 00000001
-# 00001101
+# # for item in n1
 #
-# # part2 = knot_hash_2(
-#     day10_ascii, day10_part2['list'], day10_part2['pos'], day10_part2['offset'])
-# print(part2)
-# print(day10_part2['part1'])
-#
-# if day10_part2['list'] == part2[0]:
-#     print('Fuck!!!!')
-#
-# # day10_ascii=[ ord(f) for f in list(','.join(map(lambda x: str(x),day10)))] + [17, 31, 73, 47, 23]
-#
-# # print(day10_ascii)
+# print(fline)
+# #
+# #
+# # 00001100
+# # 00000001
+# # 00001101
+# #
+# # # part2 = knot_hash_2(
+# #     day10_ascii, day10_part2['list'], day10_part2['pos'], day10_part2['offset'])
+# # print(part2)
+# # print(day10_part2['part1'])
+# #
+# # if day10_part2['list'] == part2[0]:
+# #     print('Fuck!!!!')
+# #
+# # # day10_ascii=[ ord(f) for f in list(','.join(map(lambda x: str(x),day10)))] + [17, 31, 73, 47, 23]
+# #
+# # # print(day10_ascii)
