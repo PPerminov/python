@@ -676,64 +676,87 @@ def knot_hash(input_line, rounds=1):
     return {'list': working_list, 'part1': working_list[0] * working_list[1], 'pos': position, 'offset': offset}
 
 
-day10_part1 = knot_hash(day10)
-day10_part2 = knot_hash(day10_ascii, 64)
-# print(day10_part2)
+# day10_part1 = knot_hash(day10)
+# day10_part2 = knot_hash(day10_ascii, 64)
 
-# n1 = []
-# counter = 0
-# new1_0 = []
-# for item in day10_part2['list']:
-#     # print(item)
-#     if counter != 0 and counter % 16 == 0:
-#         n1.append(new1_0)
-#         # print(len(new1_0))
-#         new1_0 = []
-#     new1_0.append(item)
-#     counter += 1
+l=','.join(list(map(lambda x: str(x),day10)))
+
+part2 = True
+
+nums = l
+
+
+if part2:
+    ## first test problem:
+    # l = "" # result should be a2582a3a0e66e6e86e3812dcb672a272
+
+    ## Second test problem:
+    # l = "AoC 2017" # result should be 33efeb34ea91902bb2f59c9920caa 6cd
+
+    ## Third test problem:
+    #l = "1,2,3" # result should be 3efbe78a8d82f29979031a4aa0b16a9d
+
+    nums = []
+    for c in l:
+        nums.append(ord(c))
+
+nums.extend([17, 31, 73, 47, 23])
+
+# print(nums)
+
+length_of_list = 256
+array = [x for x in range(length_of_list)]
+
+index = 0
+skip = 0
+
+num_iterations = 1
+if part2:
+    num_iterations = 64
+
+for _ in range(num_iterations):
+    for length in nums:
+        if (index + length) <= length_of_list:
+            newArray = list(array[:index])
+
+            reversed_part = list(reversed(array[index:index+length]))
+            newArray.extend(reversed_part)
+
+            newArray.extend(array[index+length:])
+        else:
+            middle = list(array[index+length-length_of_list:index])
+
+            toReverse = list(array[index:])
+            end_length = len(toReverse)
+
+            toReverse.extend(array[:index+length-length_of_list])
+
+            reversed_part = list(reversed(toReverse))
+
+            newArray = list(reversed_part[end_length:])
+            newArray.extend(middle)
+            newArray.extend(reversed_part[:end_length])
+
+
+
+        index = (index + skip + length) % length_of_list
+        skip += 1
+        array = newArray
 
 dense = []
 
 for y in range(16):
-    xor_list = day10_part2['list'][y*16:(y+1)*16]
+    xor_list = array[y*16:(y+1)*16]
     xor = xor_list[0]
     for i in range(1, len(xor_list)):
         xor = xor ^ xor_list[i]
     dense.append(xor)
-print(dense)
+
 s = ""
 for x in dense:
     s += "{:02x}".format(x)
 
-print(s)
-
-# fline = ''
-# for item in n1:
-#     item1 = reduce((lambda x, y: x ^ y), item)
-#     h_tmp = hex(item1).split('x')[-1]
-#     if len(h_tmp) != 2:
-#         h_tmp = '0' + h_tmp
-#
-#     fline += h_tmp
-# print(fline)
-#
-# # for item in n1
-#
-# print(fline)
-# #
-# #
-# # 00001100
-# # 00000001
-# # 00001101
-# #
-# # # part2 = knot_hash_2(
-# #     day10_ascii, day10_part2['list'], day10_part2['pos'], day10_part2['offset'])
-# # print(part2)
-# # print(day10_part2['part1'])
-# #
-# # if day10_part2['list'] == part2[0]:
-# #     print('Fuck!!!!')
-# #
-# # # day10_ascii=[ ord(f) for f in list(','.join(map(lambda x: str(x),day10)))] + [17, 31, 73, 47, 23]
-# #
-# # # print(day10_ascii)
+if part2:
+    print (s)
+else:
+    print (array[0]*array[1])
