@@ -1,5 +1,6 @@
 from capcha_data import *
 from functools import reduce
+import re
 from sys import setrecursionlimit
 setrecursionlimit(20000000)
 # # ##import time
@@ -643,120 +644,284 @@ setrecursionlimit(20000000)
 
 # Day 10
 #
-day10_ascii = [ord(f) for f in list(
-    ','.join(map(lambda x: str(x), day10)))] + [17, 31, 73, 47, 23]
+# day10_ascii = [ord(f) for f in list(
+#     ','.join(map(lambda x: str(x), day10)))] + [17, 31, 73, 47, 23]
+#
+#
+# def knot_hash(input_line, rounds=1):
+#     def get_positions(start, rng):
+#         end = start + rng
+#         if end > len(working_list) - 1:
+#             start_part = list(range(start, len(working_list)))
+#             end_part = list(range(end - len(working_list)))
+#             return start_part + end_part
+#         return list(range(start, end))
+#     for _ in range(rounds):
+#         position = 0
+#         offset = 0
+#         working_list = list(range(256))
+#         for item in input_line:
+#             positions = get_positions(position, item)
+#             tmp_line = []
+#             for pos in positions:
+#                 tmp_line.append(working_list[pos])
+#             tmp_line.reverse()
+#             for new in tmp_line:
+#                 working_list[positions[0]] = new
+#                 del(positions[0])
+#             position += (item + offset)
+#             while position > len(working_list) - 1:
+#                 # print(position)
+#                 position = position - len(working_list)
+#             offset += 1
+#     return {'list': working_list, 'part1': working_list[0] * working_list[1], 'pos': position, 'offset': offset}
+#
+#
+# # day10_part1 = knot_hash(day10)
+# # day10_part2 = knot_hash(day10_ascii, 64)
+#
+# l = ','.join(list(map(lambda x: str(x), day10)))
+#
+# part2 = True
+#
+# nums = l
+#
+#
+# if part2:
+#     # first test problem:
+#     # l = "" # result should be a2582a3a0e66e6e86e3812dcb672a272
+#
+#     # Second test problem:
+#     # l = "AoC 2017" # result should be 33efeb34ea91902bb2f59c9920caa 6cd
+#
+#     # Third test problem:
+#     # l = "1,2,3" # result should be 3efbe78a8d82f29979031a4aa0b16a9d
+#
+#     nums = []
+#     for c in l:
+#         nums.append(ord(c))
+#
+# nums.extend([17, 31, 73, 47, 23])
+#
+# # print(nums)
+#
+# length_of_list = 256
+# array = [x for x in range(length_of_list)]
+#
+# index = 0
+# skip = 0
+#
+# # num_iterations = 1
+# # if part2:
+# #     num_iterations = 64
+# #
+# # for _ in range(num_iterations):
+# #     for length in nums:
+# #         if (index + length) <= length_of_list:
+# #             newArray = list(array[:index])
+# #
+# #             reversed_part = list(reversed(array[index:index + length]))
+# #             newArray.extend(reversed_part)
+# #
+# #             newArray.extend(array[index + length:])
+# #         else:
+# #             middle = list(array[index + length - length_of_list:index])
+# #
+# #             toReverse = list(array[index:])
+# #             end_length = len(toReverse)
+# #
+# #             toReverse.extend(array[:index + length - length_of_list])
+# #
+# #             reversed_part = list(reversed(toReverse))
+# #
+# #             newArray = list(reversed_part[end_length:])
+# #             newArray.extend(middle)
+# #             newArray.extend(reversed_part[:end_length])
+# #
+# #         index = (index + skip + length) % length_of_list
+# #         skip += 1
+# #         array = newArray
+# #
+# # dense = []
+# #
+# # for y in range(16):
+# #     xor_list = array[y * 16:(y + 1) * 16]
+# #     xor = xor_list[0]
+# #     for i in range(1, len(xor_list)):
+# #         xor = xor ^ xor_list[i]
+# #     dense.append(xor)
+# #
+# # s = ""
+# # for x in dense:
+# #     s += "{:02x}".format(x)
+# #
+# # if part2:
+# #     print(s)
+# # else:
+# #     print(array[0] * array[1])
+#
+# # Day 11
+#
+#
+#
+# # print(day11.split(','))
+#
+#
+# def build_matrix(x):
+#     return_array=[]
+#     z=0
+#     t_ar=[]
+#     for item in range(x):
+#         print('gdfgdfgdf',item)
+#         if z==0:
+#             z=1
+#         else:
+#             z=0
+#         t_ar.append(z)
+#     return_array.append(t_ar)
+#     for item in range(x):
+#         print(item)
+#         t_ar=list(map((lambda x: 0 if x ==1 else 1),return_array [len(return_array)-1]))
+#         return_array.append(t_ar)
+#     return return_array
+#
+#
+# matrix=build_matrix(1000000)
+# center=[int(len(matrix[0])/2),int(len(matrix)/2)]
+# for item in matrix:
+#     print(item[0])
+#
+# print(center)
+#
+#
+#
+#
+#
 
 
-def knot_hash(input_line, rounds=1):
-    def get_positions(start, rng):
-        end = start + rng
-        if end > len(working_list) - 1:
-            start_part = list(range(start, len(working_list)))
-            end_part = list(range(end - len(working_list)))
-            return start_part + end_part
-        return list(range(start, end))
-    for _ in range(rounds):
-        position = 0
-        offset = 0
-        working_list = list(range(256))
-        for item in input_line:
-            positions = get_positions(position, item)
-            tmp_line = []
-            for pos in positions:
-                tmp_line.append(working_list[pos])
-            tmp_line.reverse()
-            for new in tmp_line:
-                working_list[positions[0]] = new
-                del(positions[0])
-            position += (item + offset)
-            while position > len(working_list) - 1:
-                # print(position)
-                position = position - len(working_list)
-            offset += 1
-    return {'list': working_list, 'part1': working_list[0] * working_list[1], 'pos': position, 'offset': offset}
 
+#day 17
 
-# day10_part1 = knot_hash(day10)
-# day10_part2 = knot_hash(day10_ascii, 64)
-
-l=','.join(list(map(lambda x: str(x),day10)))
-
-part2 = True
-
-nums = l
-
-
-if part2:
-    ## first test problem:
-    # l = "" # result should be a2582a3a0e66e6e86e3812dcb672a272
-
-    ## Second test problem:
-    # l = "AoC 2017" # result should be 33efeb34ea91902bb2f59c9920caa 6cd
-
-    ## Third test problem:
-    #l = "1,2,3" # result should be 3efbe78a8d82f29979031a4aa0b16a9d
-
-    nums = []
-    for c in l:
-        nums.append(ord(c))
-
-nums.extend([17, 31, 73, 47, 23])
-
-# print(nums)
-
-length_of_list = 256
-array = [x for x in range(length_of_list)]
-
-index = 0
-skip = 0
-
-num_iterations = 1
-if part2:
-    num_iterations = 64
-
-for _ in range(num_iterations):
-    for length in nums:
-        if (index + length) <= length_of_list:
-            newArray = list(array[:index])
-
-            reversed_part = list(reversed(array[index:index+length]))
-            newArray.extend(reversed_part)
-
-            newArray.extend(array[index+length:])
-        else:
-            middle = list(array[index+length-length_of_list:index])
-
-            toReverse = list(array[index:])
-            end_length = len(toReverse)
-
-            toReverse.extend(array[:index+length-length_of_list])
-
-            reversed_part = list(reversed(toReverse))
-
-            newArray = list(reversed_part[end_length:])
-            newArray.extend(middle)
-            newArray.extend(reversed_part[:end_length])
+# def get_position(start,len,steps):
+#     tm1p=start+steps+1
+#     while tm1p > len:
+#         tm1p-=len
+#     return tm1p
+#
+# print(get_position(0,1,363))
+#
+# def spinner(x):
+#     current_position=0
+#     array1=[0]
+#     value=1
+#     for i in range(50000001):
+#         print(i)
+#         next_position=get_position(current_position,len(array1),x)
+#         array1.insert(next_position,value)
+#         current_position=next_position
+#         value+=1
+#     print(array1)
+#     return array1
+#
+# def get_next_to_2017(array1):
+#     for i in range(len(array1)):
+#         if array1[i] != 0:
+#             continue
+#         print(array1[i+1])
+#         break
+#
+# def spinner_new(x):
+#     current_position=0
+#     array1_len=1
+#     null_position=0
+#     next_null_position=''
+#     value=1
+#     for i in range(50000001):
+#         next_position=get_position(current_position,array1_len,x)
+#         if next_position == 1:
+#             next_null_position = value
+#         # if next_position==null_position:
+#         #     next_null_position=value
+#         #     print(value)
+#         # array1.insert(next_position,value)
+#         current_position=next_position
+#         value+=1
+#         array1_len+=1
+#     print(next_null_position)
 
 
 
-        index = (index + skip + length) % length_of_list
-        skip += 1
-        array = newArray
+# print()
+# def spinner(x,array1=[],currpos):
 
-dense = []
 
-for y in range(16):
-    xor_list = array[y*16:(y+1)*16]
-    xor = xor_list[0]
-    for i in range(1, len(xor_list)):
-        xor = xor ^ xor_list[i]
-    dense.append(xor)
 
-s = ""
-for x in dense:
-    s += "{:02x}".format(x)
+# print(get_next_to_2017(spinner(day17)))
+# print(spinner_new(363))
 
-if part2:
-    print (s)
-else:
-    print (array[0]*array[1])
+#day16
+# class day16:
+#     def __init__(self):
+#         self.id_ar=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+#         self.letters={}
+
+def day16_data_parser(x):
+    def spin(array_to_spin,size):
+        a=len(array_to_spin)
+        end=(len(array_to_spin) )
+        start=(end - size)
+        range1=[]
+        for point in range(start,end):
+            range1.append(array_to_spin[point])
+        for point in range(start):
+            range1.append(array_to_spin[point])
+        print(a-len(range1))
+        return range1
+    def exchange (array_to_exchange,s1,s2):
+
+        array_to_exchange[s1],array_to_exchange[s2]=array_to_exchange[s2],array_to_exchange[s1]
+        # print(a-len(array_to_exchange))
+        return array_to_exchange
+    def reposition (array_to_reposition,s1,s2):
+
+        s1=array_to_reposition.index(s1)
+        s2=array_to_reposition.index(s2)
+        array_to_reposition[s1],array_to_reposition[s2]=array_to_reposition[s2],array_to_reposition[s1]
+
+        return array_to_reposition
+    def simplesplit(y,delim=None):
+        if delim == None:
+            return list(y)
+        return y.split(delim)
+    a=x.split(',')
+    a=list(map(datarer,a))
+    # array1={"a":0,"b":1,"c":2,"d":3,"e":4,"f":5,"g":6,"h":7,"i":8,"g":9,"k":10,"l":11,"m":12,"n":13,"o":14,"p":15}
+    array1=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p"]
+    for item in a:
+        if item[0] == "s":
+            array1=spin(array1,item[1])
+        elif item[0] == "x":
+            array1=exchange(array1,item[1][0],item[1][1])
+        elif item[0] == "p":
+            array1=reposition(array1,item[1][0],item[1][1])
+    return ''.join(array1)
+
+    # print(mapped)
+
+def datarer(x):
+    if x[0] == "s":
+        dance_type="s"
+        data=int(x[1:])
+    elif x[0] == "p":
+        dance_type="p"
+        data=(x[1:]).split('/')
+    elif x[0] == "x":
+        dance_type="x"
+        data=(x[1:]).split('/')
+        data=list(map(lambda x: int(x),data))
+    return [dance_type,data]
+
+
+
+
+print(day16_data_parser(day16_raw))
