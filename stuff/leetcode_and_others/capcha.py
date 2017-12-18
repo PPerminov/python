@@ -1,6 +1,6 @@
 from capcha_data import *
 from functools import reduce
-import re
+import math
 from sys import setrecursionlimit
 setrecursionlimit(20000000)
 # # ##import time
@@ -860,53 +860,41 @@ setrecursionlimit(20000000)
 # print(spinner_new(363))
 
 #day16
-# class day16:
-#     def __init__(self):
-#         self.id_ar=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-#         self.letters={}
 
-def day16_data_parser(x):
+def day16_data_parser(x,loops=1):
+    a=x.split(',')
+    a=list(map(datarer,a))
+    array1=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p"]
     def spin(array_to_spin,size):
-        a=len(array_to_spin)
-        end=(len(array_to_spin) )
+        end=(len(array_to_spin))
         start=(end - size)
         range1=[]
         for point in range(start,end):
             range1.append(array_to_spin[point])
         for point in range(start):
             range1.append(array_to_spin[point])
-        print(a-len(range1))
         return range1
     def exchange (array_to_exchange,s1,s2):
-
         array_to_exchange[s1],array_to_exchange[s2]=array_to_exchange[s2],array_to_exchange[s1]
-        # print(a-len(array_to_exchange))
         return array_to_exchange
     def reposition (array_to_reposition,s1,s2):
-
         s1=array_to_reposition.index(s1)
         s2=array_to_reposition.index(s2)
         array_to_reposition[s1],array_to_reposition[s2]=array_to_reposition[s2],array_to_reposition[s1]
-
         return array_to_reposition
-    def simplesplit(y,delim=None):
-        if delim == None:
-            return list(y)
-        return y.split(delim)
-    a=x.split(',')
-    a=list(map(datarer,a))
-    # array1={"a":0,"b":1,"c":2,"d":3,"e":4,"f":5,"g":6,"h":7,"i":8,"g":9,"k":10,"l":11,"m":12,"n":13,"o":14,"p":15}
-    array1=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p"]
-    for item in a:
-        if item[0] == "s":
-            array1=spin(array1,item[1])
-        elif item[0] == "x":
-            array1=exchange(array1,item[1][0],item[1][1])
-        elif item[0] == "p":
-            array1=reposition(array1,item[1][0],item[1][1])
-    return ''.join(array1)
+    def main_line(array1):
+        for item in a:
+            if item[0] == "s":
+                array1=spin(array1,item[1])
+            elif item[0] == "x":
+                array1=exchange(array1,item[1][0],item[1][1])
+            elif item[0] == "p":
+                array1=reposition(array1,item[1][0],item[1][1])
+        return array1
+    for i in range(loops):
+        array1=main_line(array1)
 
-    # print(mapped)
+    return [''.join(array1),array1]
 
 def datarer(x):
     if x[0] == "s":
@@ -921,7 +909,39 @@ def datarer(x):
         data=list(map(lambda x: int(x),data))
     return [dance_type,data]
 
+def differer(b,cycles):
+    resulted=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p"]
+    a=resulted
+    big_cycle=cycles
+    b_c = 1
+    def diff_find(a,b):
+        diff_line={}
+        for i in range(len(a)):
+            pos_from = i
+            pos_to = b.index(resulted[i])
+            diff_line[pos_from]=pos_to
+        return diff_line
+    diff_line=diff_find(a,b)
+    def differenter(a,diff_line):
+        b=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+        for key,value in diff_line.items():
+            b[value]=a[key]
+        return b
+    print(diff_line)
+    print(differenter(a,diff_line))
+    while b_c != big_cycle:
+        c=differenter(a,diff_line)
+        a=c
+        if b_c % 1000 == 0:
+            diff_line=diff_find(resulted,a)
+            big_cycle/=1000
+            b_c=0
+            a=resulted
+        b_c+=1
+    return a
 
 
-
-print(day16_data_parser(day16_raw))
+part_1=day16_data_parser(day16_raw)
+# print(''.join(differer(part_1[1],1000)))
+print(''.join(differer(part_1[1],(1000000000))))
+# print(1000000000%12)
